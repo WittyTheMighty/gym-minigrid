@@ -18,7 +18,7 @@ COLORS = {
     'purple': np.array([112, 39, 195]),
     'yellow': np.array([255, 255, 0]),
     'grey'  : np.array([100, 100, 100]),
-    'cyan'  : np.array([100, 100, 100])
+    'cyan'  : np.array([0, 255, 255])
 }
 
 COLOR_NAMES = sorted(list(COLORS.keys()))
@@ -168,7 +168,7 @@ class Goal(WorldObj):
 
 class SubGoal(WorldObj):
     def __init__(self):
-        super().__init__('subgoal', 'cyan')
+        super().__init__('subgoal', 'green')
 
     def can_overlap(self):
         return True
@@ -785,6 +785,7 @@ class MiniGridEnv(gym.Env):
             'box'           : 'B',
             'goal'          : 'G',
             'lava'          : 'V',
+            'subgoal'       : 'S'
         }
 
         # Short string for opened door
@@ -1141,6 +1142,9 @@ class MiniGridEnv(gym.Env):
             if fwd_cell != None and fwd_cell.type == 'goal':
                 done = True
                 reward = self._reward()
+            if fwd_cell != None and fwd_cell.type == 'subgoal':
+                reward = self._reward()
+                self.grid.set(*fwd_pos, None)
             if fwd_cell != None and fwd_cell.type == 'lava':
                 done = True
 
